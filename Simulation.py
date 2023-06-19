@@ -13,6 +13,9 @@ def simulation(env):
     plt.plot(env.EndTerminal[0], env.EndTerminal[1], marker="s", markersize=10, markeredgecolor="blue",
              markerfacecolor="green")
 
+    for beac in env.beacons:
+        plt.plot(beac.x, beac.y, marker='o', markersize=15, markeredgecolor="black", markerfacecolor="red")
+
     plt.grid()
     plt.draw()
     plt.show()
