@@ -3,6 +3,7 @@
 # Beacons - Are waypoints which the agent is able to assist for positioning
 
 import random
+import networkx as nx
 
 
 class Env:
@@ -28,8 +29,6 @@ class Env:
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
 
-            print(beacon_obj.x, beacon_obj.y)
-
     def set_terminals(self, Ax, Ay, Bx, By):
         self.StartTerminal = (Ax, Ay)
         self.EndTerminal = (Bx, By)
@@ -41,3 +40,60 @@ class beacon:
         self.id = id_number
         self.x = x
         self.y = y
+
+
+class path:
+    def __init__(self, StartPos, GoalPos, ObstacleList):
+        self.StartPos = StartPos
+        self.GoalPos = GoalPos
+        self.ObstacleList = ObstacleList
+
+    def generate_path(self):
+        G = nx.Graph()
+
+        # Add start and goal nodes
+        G.add_node("start", pos=self.StartPos)
+        G.add_node("goal", pos=self.GoalPos)
+
+        # Add obstacle nodes
+        for i, obstacle in enumerate(self.ObstacleList):
+            G.add_node(f"obstacle{i}", pos=obstacle)
+
+        # Connect nodes within a certain distance
+        for u, u_attr in G.nodes(data=True):
+            for v, v_attr in G.nodes(data=True):
+                if u != v:
+                    u_pos = u_attr["pos"]
+                    v_pos = v_attr["pos"]
+                    distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
+                    if distance <= 1.0:  # Adjust the distance threshold as needed
+                        G.add_edge(u, v)
+
+        # Find the shortest path
+        path = nx.shortest_path(G, "start", "goal")
+
+        # Extract path positions
+        path_positions = [G.nodes[node]["pos"] for node in path]
+
+        # Plotting
+        pos = nx.get_node_attributes(G, "pos")
+        plt.figure(figsize=(8, 8))
+        nx.draw(G, pos, with_labels=True, node_color="lightgray", node_size=500, font_size=10)
+        nx.draw_networkx_nodes(G, pos, nodelist=["start", "goal"], node_color="green", node_size=500)
+        nx.draw_networkx_nodes(G, pos, nodelist=path[1:-1], node_color="blue", node_size=500)
+        nx.draw_networkx_edges(G, pos)
+        plt.plot([start[0]], [start[1]], marker="o", markersize=10, color="green")
+        plt.plot([goal[0]], [goal[1]], marker="o", markersize=10, color="green")
+        plt.plot([x for x, _ in path_positions], [y for _, y in path_positions], marker="o", markersize=10,
+                 color="blue")
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        plt.title("Path Planning")
+        plt.grid(True)
+        plt.show()
+
+
+
+        pass
+
+    pass
