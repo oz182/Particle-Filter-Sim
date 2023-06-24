@@ -11,8 +11,8 @@ class Env:
         self.width = width
         self.height = height
         self.beacons = []  # a list of objects
-        self.StartTerminal = ()
-        self.EndTerminal = ()
+        self.StartTerminal = []
+        self.EndTerminal = []
 
     def add_custom_beacon(self, NewBeacon):
         # Add a beacon and manually choose it's position in the environment
@@ -23,11 +23,37 @@ class Env:
         # In the assignment, I've been asked to generate the beacons in a uniform density over a rectangular region
 
         for i in range(NumberOfBeacons):
-            x_pos = random.uniform(0, self.width)
-            y_pos = random.uniform(0, self.height)
+            x_pos = random.uniform(0, self.width - 5)
+            y_pos = random.uniform(0, self.height - 5)
 
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
+
+    def generate_path(self):
+        G = nx.grid_graph(dim=[30, 40])
+
+        # Add start and goal nodes
+        G.add_node("start", pos=self.StartTerminal)
+        G.add_node("goal", pos=self.EndTerminal)
+
+        # Add obstacle nodes
+        for i, obstacle in enumerate(self.beacons):
+            G.add_node(f"obstacle{i}", pos=(obstacle.x, obstacle.y))
+
+        # # Connect nodes within a certain distance
+        # for u, u_attr in G.nodes(data=True):
+        #     for v, v_attr in G.nodes(data=True):
+        #         if u != v:
+        #             u_pos = u_attr["pos"]
+        #             v_pos = v_attr["pos"]
+        #             distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
+        #             if distance <= 20.0:  # Adjust the distance threshold as needed
+        #                 G.add_edge(u, v)
+
+        ShortestPath = nx.shortest_path(G, 'start', 'goal')
+        print(ShortestPath)
+        for node in G.nodes:
+            print(G.nodes[node]["pos"])
 
     def set_terminals(self, Ax, Ay, Bx, By):
         self.StartTerminal = (Ax, Ay)
@@ -48,6 +74,8 @@ class path:
         self.GoalPos = GoalPos
         self.ObstacleList = ObstacleList
 
+
+"""
     def generate_path(self):
         G = nx.Graph()
 
@@ -92,8 +120,7 @@ class path:
         plt.grid(True)
         plt.show()
 
-
-
         pass
 
     pass
+"""
