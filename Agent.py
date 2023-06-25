@@ -5,5 +5,3 @@
 #   - Self velocity
 #   - Position and ID of the beacons in the environment
 
-
-

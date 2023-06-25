@@ -16,6 +16,16 @@ def simulation(env):
     for beacon in env.beacons:
         plt.plot(beacon.x, beacon.y, marker='o', markersize=15, markeredgecolor="black", markerfacecolor="red")
 
+    for step in env.PathSteps:
+        plt.plot(step[0], step[1], marker='o', markersize=5, markeredgecolor="black", markerfacecolor="green")
+
+    x_values = []
+    y_values = []
+    for step in env.PathSteps:
+        x_values.append(step[0])
+        y_values.append(step[1])
+    plt.plot(x_values, y_values, 'black')
+
     ax.minorticks_on()
     ax.grid(which='major', color='#CCCCCC', linestyle='--', alpha=1)
     ax.grid(which='minor', color='#CCCCCC', linestyle=':', alpha=0.7)

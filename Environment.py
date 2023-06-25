@@ -14,6 +14,8 @@ class Env:
         self.StartTerminal = []
         self.EndTerminal = []
 
+        self.PathSteps = []
+
     def add_custom_beacon(self, NewBeacon):
         # Add a beacon and manually choose it's position in the environment
         self.beacons.append(NewBeacon)
@@ -29,31 +31,44 @@ class Env:
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
 
-    def generate_path(self):
-        G = nx.grid_graph(dim=[30, 40])
+    def generate_random_path(self, NumberOfSteps):
+        # The function will generate the waypoints that will eventually build the path. In this function
+        # the path is constructed randomly.
+
+        TempSteps = []
+
+        for i in range(NumberOfSteps):
+            x_pos = random.uniform(5, self.width - 5)
+            y_pos = random.uniform(5, self.height - 5)
+
+            Step = [x_pos, y_pos]
+            TempSteps.append(Step)
+
+        G = nx.Graph()
 
         # Add start and goal nodes
         G.add_node("start", pos=self.StartTerminal)
         G.add_node("goal", pos=self.EndTerminal)
 
         # Add obstacle nodes
-        for i, obstacle in enumerate(self.beacons):
-            G.add_node(f"obstacle{i}", pos=(obstacle.x, obstacle.y))
+        for i, step in enumerate(TempSteps):
+            G.add_node(f"waypoint{i}", pos=step)
 
-        # # Connect nodes within a certain distance
-        # for u, u_attr in G.nodes(data=True):
-        #     for v, v_attr in G.nodes(data=True):
-        #         if u != v:
-        #             u_pos = u_attr["pos"]
-        #             v_pos = v_attr["pos"]
-        #             distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-        #             if distance <= 20.0:  # Adjust the distance threshold as needed
-        #                 G.add_edge(u, v)
+        # Connect nodes within a certain distance
+        for u, u_attr in G.nodes(data=True):
+            for v, v_attr in G.nodes(data=True):
+                if u != v:
+                    u_pos = u_attr["pos"]
+                    v_pos = v_attr["pos"]
+                    distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
+                    if distance <= 5.0:  # Adjust the distance threshold as needed
+                        G.add_edge(u, v)
 
-        ShortestPath = nx.shortest_path(G, 'start', 'goal')
-        print(ShortestPath)
-        for node in G.nodes:
-            print(G.nodes[node]["pos"])
+        # Find the shortest path
+        Shortest_path = nx.shortest_path(G, "start", "goal")
+
+        for node in Shortest_path:
+            self.PathSteps.append(G.nodes[node]["pos"])
 
     def set_terminals(self, Ax, Ay, Bx, By):
         self.StartTerminal = (Ax, Ay)
@@ -73,6 +88,9 @@ class path:
         self.StartPos = StartPos
         self.GoalPos = GoalPos
         self.ObstacleList = ObstacleList
+
+
+#  The Comment section below is an example of using the NetworkX library
 
 
 """
