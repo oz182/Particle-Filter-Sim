@@ -61,7 +61,7 @@ class Env:
                     u_pos = u_attr["pos"]
                     v_pos = v_attr["pos"]
                     distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-                    if distance <= 5.0:  # Adjust the distance threshold as needed
+                    if distance <= 10.0:  # Adjust the distance threshold as needed
                         G.add_edge(u, v)
 
         # Find the shortest path

@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
+import mplcyberpunk
 
+plt.style.use("cyberpunk")
 fig, ax = plt.subplots(figsize=(8, 8))
 
 
@@ -29,7 +31,7 @@ def simulation(env):
     ax.minorticks_on()
     ax.grid(which='major', color='#CCCCCC', linestyle='--', alpha=1)
     ax.grid(which='minor', color='#CCCCCC', linestyle=':', alpha=0.7)
-    plt.style.use('dark_background')
+    mplcyberpunk.add_glow_effects()
     plt.draw()
     plt.show()
     plt.pause(0.01)
