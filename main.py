@@ -1,6 +1,8 @@
 # Particle Filter algorithm simulation
 
 from Environment import *
+from Agent import *
+from ParticleFilter import *
 from Simulation import *
 
 
@@ -12,7 +14,12 @@ def main():
 
     envFrame.generate_random_path(100)  # Input number of waypoints for the path
 
-    simulation(envFrame)
+    robot = Agent(envFrame.StartTerminal, envFrame.beacons)
+
+    PF = ParticleFilter(400, [envFrame.width, envFrame.height])
+    PF.initialize_particles()
+
+    simulation(envFrame, robot, PF)
 
 
 if __name__ == "__main__":
