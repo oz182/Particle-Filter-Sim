@@ -9,17 +9,19 @@
 # This position will not be used in the overall algorithm.
 
 import numpy as np
+from main import TIME_INTERVAL
 
 
 class Agent:
     def __init__(self, initial_position, BeaconsList):
-        self.position = initial_position
+        self.position = list(initial_position)
+        self.OdometerVel = 20
         self.BeaconsList = BeaconsList
 
-    def move(self, delta_x, delta_y):
+    def move(self):
         # Update the agent's position based on the given deltas
-        self.position[0] += delta_x
-        self.position[1] += delta_y
+        self.position[0] += (self.OdometerVel * TIME_INTERVAL)
+        self.position[1] += (self.OdometerVel * TIME_INTERVAL)
 
     def sense(self):
         # Simulate sensing the agent's position by adding noise

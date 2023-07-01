@@ -37,7 +37,8 @@ class ParticleFilter:
         # Calculate the likelihood of the particle given the sensed position
         # You can use a distance-based likelihood calculation, for example
         # Return the likelihood value
-        pass
+
+        return 1
 
     def resample(self):
         # Resample the particles based on their weights
