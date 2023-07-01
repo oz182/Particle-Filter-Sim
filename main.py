@@ -36,9 +36,9 @@ def main():
     # The main algorithm loop
     while not arrived_to_goal(robot, envFrame):
 
-        robot.move()
+        robot.acquire_sensors_data()
 
-        # SensedPosition = robot.sense()
+        robot.move()
         simulation(envFrame, robot, PF)
         pass
 

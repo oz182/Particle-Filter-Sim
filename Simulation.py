@@ -43,5 +43,4 @@ def simulation(env, agent, ParticleFilter):
     ax.grid(which='minor', color='#000000', linestyle=':', alpha=0.4)
     # mplcyberpunk.add_glow_effects()  # This line makes some weird color effect... Unnecessary
     plt.draw()
-    plt.show()
     plt.pause(0.01)

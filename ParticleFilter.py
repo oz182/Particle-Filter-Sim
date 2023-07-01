@@ -5,6 +5,10 @@ import numpy as np
 from numpy.random import uniform
 
 
+def run_pf_iteration(PF_obj):
+    pass
+
+
 class ParticleFilter:
     def __init__(self, num_particles, map_size):
         self.num_particles = num_particles
