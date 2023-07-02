@@ -20,26 +20,26 @@ class Env:
         # Add a beacon and manually choose it's position in the environment
         self.beacons.append(NewBeacon)
 
-    def generate_beacons(self, NumberOfBeacons):
+    def generate_uniform_random_beacons(self, NumberOfBeacons):
         # The function will generate the beacons
         # In the assignment, I've been asked to generate the beacons in a uniform density over a rectangular region
 
         for i in range(NumberOfBeacons):
-            x_pos = random.uniform(0, self.width - 5)
-            y_pos = random.uniform(0, self.height - 5)
+            x_pos = random.uniform(1, self.width - 1)
+            y_pos = random.uniform(1, self.height - 1)
 
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
 
-    def generate_random_path(self, NumberOfSteps):
+    def generate_uniform_random_path(self, NumberOfSteps):
         # The function will generate the waypoints that will eventually build the path. In this function
         # the path is constructed randomly.
 
         TempSteps = []
 
         for i in range(NumberOfSteps):
-            x_pos = random.uniform(5, self.width - 5)
-            y_pos = random.uniform(5, self.height - 5)
+            x_pos = random.uniform(0, self.width)
+            y_pos = random.uniform(0, self.height)
 
             Step = [x_pos, y_pos]
             TempSteps.append(Step)
@@ -61,7 +61,7 @@ class Env:
                     u_pos = u_attr["pos"]
                     v_pos = v_attr["pos"]
                     distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-                    if distance <= 10.0:  # Adjust the distance threshold as needed
+                    if distance <= 1.0:  # Adjust the distance threshold as needed
                         G.add_edge(u, v)
 
         # Find the shortest path

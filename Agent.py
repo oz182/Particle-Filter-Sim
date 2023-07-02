@@ -14,16 +14,21 @@ from main import TIME_INTERVAL
 
 
 class Agent:
-    def __init__(self, initial_position, BeaconsList):
+    def __init__(self, initial_position, BeaconsList, PathSteps):
         self.position = list(initial_position)
         self.OdometerVel = 20
         self.BeaconsList = BeaconsList
         self.DistFromBeacons = []
+        self.PathSteps = PathSteps
+        self.PositionInPath = 0
 
     def move(self):
-        # Update the agent's position based on the given deltas
-        self.position[0] += (self.OdometerVel * TIME_INTERVAL)
-        self.position[1] += (self.OdometerVel * TIME_INTERVAL)
+        self.position[0] = self.PathSteps[self.PositionInPath][0]
+        self.position[1] = self.PathSteps[self.PositionInPath][1]
+
+        self.PositionInPath += 1
+        # self.position[0] += (self.OdometerVel * TIME_INTERVAL)
+        # self.position[1] += (self.OdometerVel * TIME_INTERVAL)
 
     def acquire_sensors_data(self):
         # Simulate sensing the agent's position by adding noise

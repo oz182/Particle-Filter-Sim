@@ -31,7 +31,7 @@ def simulation(env, agent, ParticleFilter):
     plt.plot(x_values, y_values, 'black')
 
     # Plot Agent
-    plt.plot(agent.position[0], agent.position[1], marker='*', markersize=15, markeredgecolor="red",
+    plt.plot(agent.position[0], agent.position[1], marker='*', markersize=10, markeredgecolor="red",
              markerfacecolor="yellow")
 
     # Plot particles
