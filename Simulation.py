@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import mplcyberpunk
+import mplcyberpunk  # The IDE shows this library as unused but it does used in line 4
 
 plt.style.use("cyberpunk")
 fig, ax = plt.subplots(figsize=(8, 8))
@@ -31,7 +31,7 @@ def simulation(env, agent, ParticleFilter):
     plt.plot(x_values, y_values, 'black')
 
     # Plot Agent
-    plt.plot(agent.position[0], agent.position[1], marker='*', markersize=15, markeredgecolor="red",
+    plt.plot(agent.position[0], agent.position[1], marker='*', markersize=10, markeredgecolor="red",
              markerfacecolor="yellow")
 
     # Plot particles
@@ -43,5 +43,4 @@ def simulation(env, agent, ParticleFilter):
     ax.grid(which='minor', color='#000000', linestyle=':', alpha=0.4)
     # mplcyberpunk.add_glow_effects()  # This line makes some weird color effect... Unnecessary
     plt.draw()
-    plt.show()
     plt.pause(0.01)

@@ -10,20 +10,36 @@
 
 import numpy as np
 
+from main import TIME_INTERVAL
+
 
 class Agent:
-    def __init__(self, initial_position, BeaconsList):
-        self.position = initial_position
+    def __init__(self, initial_position, BeaconsList, PathSteps):
+        self.position = list(initial_position)
+        self.OdometerVel = 20
         self.BeaconsList = BeaconsList
+        self.DistFromBeacons = []
+        self.PathSteps = PathSteps
+        self.PositionInPath = 0
 
-    def move(self, delta_x, delta_y):
-        # Update the agent's position based on the given deltas
-        self.position[0] += delta_x
-        self.position[1] += delta_y
+    def move(self):
+        self.position[0] = self.PathSteps[self.PositionInPath][0]
+        self.position[1] = self.PathSteps[self.PositionInPath][1]
 
-    def sense(self):
+        self.PositionInPath += 1
+        # self.position[0] += (self.OdometerVel * TIME_INTERVAL)
+        # self.position[1] += (self.OdometerVel * TIME_INTERVAL)
+
+    def acquire_sensors_data(self):
         # Simulate sensing the agent's position by adding noise
+        # Moreover, sense all the other data (speed, distance from waypoints)
+
         true_position = self.position
         sensed_position = np.random.normal(loc=true_position, scale=[0.1, 0.1])  # Example noise
+
+        for beacon in self.BeaconsList:
+            # distance = agent.measure_distance(waypoint)
+            # waypoint_distances.append(distance)
+            pass
 
         return sensed_position

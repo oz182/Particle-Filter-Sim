@@ -5,6 +5,10 @@ import numpy as np
 from numpy.random import uniform
 
 
+def run_pf_iteration(PF_obj):
+    pass
+
+
 class ParticleFilter:
     def __init__(self, num_particles, map_size):
         self.num_particles = num_particles
@@ -37,7 +41,8 @@ class ParticleFilter:
         # Calculate the likelihood of the particle given the sensed position
         # You can use a distance-based likelihood calculation, for example
         # Return the likelihood value
-        pass
+
+        return 1
 
     def resample(self):
         # Resample the particles based on their weights
