@@ -10,16 +10,17 @@
 
 import numpy as np
 
-from main import TIME_INTERVAL
+from Simulation import TIME_INTERVAL
 
 
 class Agent:
     def __init__(self, initial_position, BeaconsList, PathSteps):
         self.position = list(initial_position)
-        self.OdometerVel = 0
+        self.OdometerVel_x = 0
+        self.OdometerVel_y = 0
         self.BeaconsList = BeaconsList
         self.DistFromBeacons = []
-        self.PathSteps = PathSteps
+        self.PathSteps = PathSteps  # A list contains the step's coordinates on the path
         self.PositionInPath = 0
 
     def move(self):
@@ -43,3 +44,15 @@ class Agent:
             pass
 
         return sensed_position
+
+    def odometer_reading(self):
+        #  Get the velocity by the equation: (Current_pos - Prev_pos) / dt
+        #  Integral on the delta position
+        #  TODO Add the sensor's noise to the reading
+        vel_x = (self.PathSteps[self.PositionInPath][0] - self.PathSteps[self.PositionInPath - 1][0]) / TIME_INTERVAL
+        vel_y = (self.PathSteps[self.PositionInPath][1] - self.PathSteps[self.PositionInPath - 1][1]) / TIME_INTERVAL
+
+        self.OdometerVel_x = vel_x
+        self.OdometerVel_y = vel_y
+
+

@@ -4,6 +4,8 @@
 import numpy as np
 from numpy.random import uniform
 
+from Simulation import TIME_INTERVAL
+
 
 class ParticleFilter:
     def __init__(self, num_particles, map_size):
@@ -18,11 +20,11 @@ class ParticleFilter:
             particle = np.random.uniform(low=[0, 0], high=self.map_size)  # Uniform distribution around the map size
             self.particles.append(particle)
 
-    def predict(self, delta_x, delta_y):
+    def predict(self, vel_x, vel_y):
         # Update the particles based on the agent's movement
-        for i in range(self.num_particles):
-            self.particles[i][0] += delta_x
-            self.particles[i][1] += delta_y
+        for par in self.particles:
+            par[0] += vel_x * TIME_INTERVAL
+            par[1] += vel_y * TIME_INTERVAL
 
     def update_weights(self, sensed_position):
         # Update the weights based on the observed data
@@ -51,11 +53,12 @@ class ParticleFilter:
         return estimated_state
 
 
-def run_filter_iteration(ParticleFilterObj, delta_x, delta_y, sensed_pos):
+def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, sensed_pos):
     # This function starts one filter iteration
 
-    ParticleFilterObj.predict(delta_x, delta_y)
-    ParticleFilterObj.update_weights(sensed_pos)
-    ParticleFilterObj.calculate_liklihood()
-    ParticleFilterObj.resample()
-    ParticleFilterObj.estimate_state()
+    ParticleFilterObj.predict(vel_x, vel_y)
+    #ParticleFilterObj.update_weights(sensed_pos)
+    #ParticleFilterObj.calculate_liklihood()
+    #ParticleFilterObj.resample()
+    #ParticleFilterObj.estimate_state()
+    pass

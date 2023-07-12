@@ -5,8 +5,6 @@ from Agent import *
 from ParticleFilter import *
 from Simulation import *
 
-TIME_INTERVAL = 0.01  # Global constant
-
 
 def arrived_to_goal(robot, env):
     DistToGoal_X = abs(robot.position[0] - env.EndTerminal[0])
@@ -37,13 +35,13 @@ def main():
     # In this loop the agent is moving along the path, and its position is estimated using the
     # particle filter algorithm.
     while not arrived_to_goal(robot, envFrame):
-
-        robot.acquire_sensors_data()
-
         # Estimate position using particle filter - function "run_pf_iteration"
-        # run_filter_iteration(PF, )
+        run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, 1)
 
         robot.move()  # move the robot along the path
+
+        robot.acquire_sensors_data()
+        robot.odometer_reading()
 
         simulation(envFrame, robot, PF)
 

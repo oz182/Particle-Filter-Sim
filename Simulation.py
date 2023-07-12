@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import mplcyberpunk  # The IDE shows this library as unused but it does used in line 4
 
+TIME_INTERVAL = 0.01  # Global constant
+
 plt.style.use("cyberpunk")
 fig, ax = plt.subplots(figsize=(8, 8))
 
