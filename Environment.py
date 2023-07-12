@@ -75,6 +75,40 @@ class Env:
         self.EndTerminal = (Bx, By)
         pass
 
+    def set_pre_defined_beacons(self):  # Sets pre-defined beacons location
+        beacon_obj1 = beacon(1, 5, 6)
+        self.beacons.append(beacon_obj1)
+        beacon_obj2 = beacon(2, 10, 8)
+        self.beacons.append(beacon_obj2)
+        beacon_obj3 = beacon(3, 5, 6)
+        self.beacons.append(beacon_obj3)
+        beacon_obj4 = beacon(4, 5, 6)
+        self.beacons.append(beacon_obj4)
+        beacon_obj5 = beacon(5, 5, 6)
+        self.beacons.append(beacon_obj5)
+        beacon_obj6 = beacon(6, 5, 6)
+        self.beacons.append(beacon_obj6)
+        beacon_obj7 = beacon(7, 5, 6)
+        self.beacons.append(beacon_obj7)
+        beacon_obj8 = beacon(8, 5, 6)
+        self.beacons.append(beacon_obj8)
+        beacon_obj9 = beacon(9, 5, 6)
+        self.beacons.append(beacon_obj9)
+        beacon_obj10 = beacon(10, 5, 6)
+        self.beacons.append(beacon_obj10)
+
+    def set_pre_defined_path(self):  # A constant path (The path needs to cross 50% of the beacons)
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+
 
 class beacon:
     def __init__(self, id_number, x, y):

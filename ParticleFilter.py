@@ -5,10 +5,6 @@ import numpy as np
 from numpy.random import uniform
 
 
-def run_pf_iteration(PF_obj):
-    pass
-
-
 class ParticleFilter:
     def __init__(self, num_particles, map_size):
         self.num_particles = num_particles
@@ -19,7 +15,7 @@ class ParticleFilter:
     def initialize_particles(self):
         # Initialize the particles randomly within the map boundaries
         for _ in range(self.num_particles):
-            particle = np.random.uniform(low=[0, 0], high=self.map_size)
+            particle = np.random.uniform(low=[0, 0], high=self.map_size)  # Uniform distribution around the map size
             self.particles.append(particle)
 
     def predict(self, delta_x, delta_y):
@@ -41,7 +37,6 @@ class ParticleFilter:
         # Calculate the likelihood of the particle given the sensed position
         # You can use a distance-based likelihood calculation, for example
         # Return the likelihood value
-
         return 1
 
     def resample(self):
@@ -54,3 +49,13 @@ class ParticleFilter:
         # Compute the estimated state based on the weighted average of particles
         estimated_state = np.average(self.particles, weights=self.weights, axis=0)
         return estimated_state
+
+
+def run_filter_iteration(ParticleFilterObj, delta_x, delta_y, sensed_pos):
+    # This function starts one filter iteration
+
+    ParticleFilterObj.predict(delta_x, delta_y)
+    ParticleFilterObj.update_weights(sensed_pos)
+    ParticleFilterObj.calculate_liklihood()
+    ParticleFilterObj.resample()
+    ParticleFilterObj.estimate_state()

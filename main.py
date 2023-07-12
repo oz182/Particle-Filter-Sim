@@ -5,7 +5,7 @@ from Agent import *
 from ParticleFilter import *
 from Simulation import *
 
-TIME_INTERVAL = 0.01
+TIME_INTERVAL = 0.01  # Global constant
 
 
 def arrived_to_goal(robot, env):
@@ -34,13 +34,16 @@ def main():
     PF.initialize_particles()
 
     # The main algorithm loop
+    # In this loop the agent is moving along the path, and its position is estimated using the
+    # particle filter algorithm.
     while not arrived_to_goal(robot, envFrame):
 
         robot.acquire_sensors_data()
 
         # Estimate position using particle filter - function "run_pf_iteration"
+        # run_filter_iteration(PF, )
 
-        robot.move()
+        robot.move()  # move the robot along the path
 
         simulation(envFrame, robot, PF)
 

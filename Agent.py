@@ -16,7 +16,7 @@ from main import TIME_INTERVAL
 class Agent:
     def __init__(self, initial_position, BeaconsList, PathSteps):
         self.position = list(initial_position)
-        self.OdometerVel = 20
+        self.OdometerVel = 0
         self.BeaconsList = BeaconsList
         self.DistFromBeacons = []
         self.PathSteps = PathSteps
