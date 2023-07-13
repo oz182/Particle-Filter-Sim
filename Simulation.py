@@ -38,7 +38,8 @@ def simulation(env, agent, ParticleFilter):
 
     # Plot particles
     for particle in ParticleFilter.particles:
-        plt.plot(particle[0], particle[1], marker='o', markersize=1, markeredgecolor="white", markerfacecolor="red")
+        plt.plot(particle.pos[0], particle.pos[1], marker='o', markersize=1, markeredgecolor="white",
+                 markerfacecolor="red")
 
     ax.minorticks_on()
     ax.grid(which='major', color='#000000', linestyle='--', alpha=0.5)

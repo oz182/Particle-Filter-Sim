@@ -36,11 +36,12 @@ def main():
     # particle filter algorithm.
     while not arrived_to_goal(robot, envFrame):
         # Estimate position using particle filter - function "run_pf_iteration"
-        run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, 1)
+        # Gets the filter object, and sensors measurements
+        run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances)
 
         robot.move()  # move the robot along the path
 
-        robot.acquire_sensors_data()
+        robot.proximity_reading()
         robot.odometer_reading()
 
         simulation(envFrame, robot, PF)

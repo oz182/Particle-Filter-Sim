@@ -115,6 +115,7 @@ class beacon:
         self.id = id_number
         self.x = x
         self.y = y
+        self.pos = [self.x, self.y]
 
 
 class path:
