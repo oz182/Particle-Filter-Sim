@@ -32,22 +32,25 @@ class Agent:
     def proximity_reading(self):
         # Simulate the proximity sensor data, with noise Reading.
         # can be acquire only if the beacon is in the proximity sensor's range (define to be 2 in the assignment)
+        # Eventually, this function returns a list of the distance from the beacons on the map
+        # (and the value 'None' from the far away ones).
         ProxSensorRange = 2
         Prox_noise_mean = 0
         Prox_noise_var = 0.4
         ProxSensorNoise = np.random.normal(Prox_noise_mean, np.sqrt(Prox_noise_var))
+
+        # This part of the function, updates the self values of the agent's object.
+        # It creates a list of beacons id and distance in the following form: ([id, dist, pos], [is, dist, pos], ..)
+        # This list will be under the attribute self.BeaconsDistances
 
         for beacon in self.BeaconsList:
             # The distance between a beacon and the robot is calculated as the normal vector between two points.
             # The command 'norm' can get only numpy array, that why the casting
             DistFromBeacon = np.linalg.norm(abs(np.array(beacon.pos) - np.array(self.position)))
             if DistFromBeacon <= ProxSensorRange:
-                self.BeaconsDistances.append([beacon.id, (DistFromBeacon + ProxSensorNoise)])
+                self.BeaconsDistances.append([beacon.id, (DistFromBeacon + ProxSensorNoise), beacon.pos])
             else:
-                self.BeaconsDistances.append([beacon.id, None])
-
-        # The function updates the self values of the agent's object.
-        # It creates a list of beacons id and distance in the following form: ([id, dist], [is, dist], ..)
+                self.BeaconsDistances.append([beacon.id, None, beacon.pos])
 
     def odometer_reading(self):
         #  Get the velocity by the equation: (Current_pos - Prev_pos) / dt

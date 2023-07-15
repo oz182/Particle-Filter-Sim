@@ -4,7 +4,7 @@ import mplcyberpunk  # The IDE shows this library as unused but it does used in 
 TIME_INTERVAL = 0.01  # Global constant
 
 plt.style.use("cyberpunk")
-fig, ax = plt.subplots(figsize=(8, 8))
+fig, ax = plt.subplots(figsize=(10, 10))
 
 
 def simulation(env, agent, ParticleFilter):

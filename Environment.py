@@ -61,7 +61,7 @@ class Env:
                     u_pos = u_attr["pos"]
                     v_pos = v_attr["pos"]
                     distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-                    if distance <= 1.0:  # Adjust the distance threshold as needed
+                    if distance <= 2.0:  # Adjust the distance threshold as needed
                         G.add_edge(u, v)
 
         # Find the shortest path
@@ -76,31 +76,31 @@ class Env:
         pass
 
     def set_pre_defined_beacons(self):  # Sets pre-defined beacons location
-        beacon_obj1 = beacon(1, 5, 6)
+        beacon_obj1 = beacon(1, 3, 8)
         self.beacons.append(beacon_obj1)
-        beacon_obj2 = beacon(2, 10, 8)
+        beacon_obj2 = beacon(2, 4, 8)
         self.beacons.append(beacon_obj2)
-        beacon_obj3 = beacon(3, 5, 6)
+        beacon_obj3 = beacon(3, 2, 6)
         self.beacons.append(beacon_obj3)
-        beacon_obj4 = beacon(4, 5, 6)
+        beacon_obj4 = beacon(4, 7, 6)
         self.beacons.append(beacon_obj4)
-        beacon_obj5 = beacon(5, 5, 6)
+        beacon_obj5 = beacon(5, 5, 9)
         self.beacons.append(beacon_obj5)
-        beacon_obj6 = beacon(6, 5, 6)
+        beacon_obj6 = beacon(6, 4, 6)
         self.beacons.append(beacon_obj6)
-        beacon_obj7 = beacon(7, 5, 6)
+        beacon_obj7 = beacon(7, 5, 4)
         self.beacons.append(beacon_obj7)
         beacon_obj8 = beacon(8, 5, 6)
         self.beacons.append(beacon_obj8)
-        beacon_obj9 = beacon(9, 5, 6)
+        beacon_obj9 = beacon(9, 3, 2)
         self.beacons.append(beacon_obj9)
-        beacon_obj10 = beacon(10, 5, 6)
+        beacon_obj10 = beacon(10, 5, 3)
         self.beacons.append(beacon_obj10)
 
     def set_pre_defined_path(self):  # A constant path (The path needs to cross 50% of the beacons)
-        self.PathSteps.append([8, 8])
-        self.PathSteps.append([8, 8])
-        self.PathSteps.append([8, 8])
+        self.PathSteps.append([1, 2])
+        self.PathSteps.append([4, 3])
+        self.PathSteps.append([4, 3])
         self.PathSteps.append([8, 8])
         self.PathSteps.append([8, 8])
         self.PathSteps.append([8, 8])
