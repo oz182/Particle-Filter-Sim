@@ -12,10 +12,10 @@ class ParticleFilter:
     def __init__(self, num_particles, map_size):
         self.num_particles = num_particles
         self.particles = []
-        self.Particle_SumOfWeights = 1.0
+        self.ResampledParticles = []
+        self.Particles_SumOfWeights = 1.0
         self.map_size = map_size
         self.ParticlesWeightsList = []
-        self.ParticleLikelihood = 1.0
 
     def initialize_particles(self):
         # Initialize the particles randomly within the map boundaries
@@ -36,47 +36,61 @@ class ParticleFilter:
         self.Particle_SumOfWeights = 1.0
 
         for particle in self.particles:
-            self.ParticleLikelihood = 1.0  # Initialize particle's likelihood
+            particle.ParticleLikelihood = 1.0  # Initialize particle's likelihood
 
             for data in BeaconsDistances:
                 if data[1] is not None:
-
                     # 'data' is a list inside the 'BeaconsDistances' list.
                     # This list structure (data) is: [ [id,dist,pos], [], ... ]
                     # dist of particle to beacon:
-                    Dist_par_beac = np.linalg.norm(np.array(particle.pos) - np.array(data[2]))
+                    Dist_par_beac = np.linalg.norm(abs(np.array(particle.pos) - np.array(data[2])))
 
                     # Likelihood calculation, based on P(z|x), z - dist of beacon to robot,
                     # x - dist of particle to beacon
-                    self.ParticleLikelihood *= stats.norm(Dist_par_beac, 50)
-                    # TODO This value of 50 should be the std. TBD
+                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 50).pdf(data[1])
+                    # TODO This value of 50 should be the var. TBD
 
             # The next line: p(x|z) where z is the measurement and x is the state
-            particle.weight *= self.ParticleLikelihood
-
-            self.Particle_SumOfWeights += particle.weight
-            self.ParticlesWeightsList.append(particle.weight)
+            particle.weight *= particle.ParticleLikelihood
 
             # Normalize the weight
-            particle.weight = particle.weight / len(self.ParticlesWeightsList)
+            particle.weight = particle.weight / self.Particle_SumOfWeights
 
-    def resample(self, NumOfParticles):
-        # Resample the particles based on their weights
-        for particle in self.particles:
-            particle.pos = np.random.choice(NumOfParticles,
-                                            p=self.ParticlesWeightsList)  # Uniform distribution around the map size
-            particle.weight = 1 / NumOfParticles
+            self.ParticlesWeightsList.append(particle.weight)
+            particle.weight += 1.e-300
 
-        """
-        indices = np.random.choice(range(self.num_particles), size=self.num_particles, p=self.weights)
-        self.particles = [self.particles[i] for i in indices]
-        self.weights = np.ones(self.num_particles) / self.num_particles
-        """
+        self.Particles_SumOfWeights = sum(self.ParticlesWeightsList)
+
+    def systematic_resampling(self):
+
+        N = self.num_particles
+
+        CDF_weights = np.cumsum(self.ParticlesWeightsList)  # Cumulative Sum of weights
+        u1 = np.random.uniform(1e-10, 1.0 / N, 1)[0]
+
+        for j in range(1, N):
+            u_j = u1 + float(j - 1) / N
+            i = 0
+
+            while u_j > CDF_weights[i] and i < 398:
+                i += 1
+
+            self.particles[i].weight = (1.0 / N)
+            self.ResampledParticles.append(self.particles[i])
+
+        self.particles = self.ResampledParticles
+        self.ResampledParticles = []
 
     def estimate_state(self):
-        # Compute the estimated state based on the weighted average of particles - importance sampling
-        estimated_state = np.average(self.particles, weights=self.weights, axis=0)
-        return estimated_state
+        # Compute the estimated state based on the weighted average of particles
+        # For now it is used only in the 'simple_resample' function
+        ParticlesPosList = []
+        for par in self.particles:
+            ParticlesPosList.append(par.pos)
+
+        mean = np.average(ParticlesPosList, weights=self.ParticlesWeightsList, axis=0)
+        var = np.var(ParticlesPosList, axis=0)
+        return mean, var
 
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
@@ -84,11 +98,12 @@ def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
 
     ParticleFilterObj.predict(vel_x, vel_y)
     ParticleFilterObj.update_weights(BeaconsDistances)
-    # ParticleFilterObj.resample(ParticleFilterObj.num_particles)
-    # ParticleFilterObj.estimate_state()
+
+    ParticleFilterObj.systematic_resampling()
 
 
 class Particle:
     def __init__(self, NumOfParticles):
         self.pos = []
         self.weight = 1 / NumOfParticles
+        self.ParticleLikelihood = 1.0

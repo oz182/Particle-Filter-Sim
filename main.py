@@ -49,7 +49,7 @@ def main():
 
         simulation(envFrame, robot, PF)
 
-        # input("Press any key to continue>>>")  # Uncomment to control iterations
+        input("Press any key to continue>>>")  # Uncomment to control iterations
 
     print("The agent has reached the target!!")
     plt.show()  # Make the graph stay on the screen after the simulation has ended
