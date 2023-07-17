@@ -9,8 +9,8 @@ fig, ax = plt.subplots(figsize=(10, 10))
 
 def simulation(env, agent, ParticleFilter):
     ax.clear()
-    ax.set_xlim([0, env.width])
-    ax.set_ylim([0, env.height])
+    ax.set_xlim([0, env.width+20])
+    ax.set_ylim([0, env.height+20])
 
     # Plot the terminals
     plt.plot(env.StartTerminal[0], env.StartTerminal[1], marker="s", markersize=10, markeredgecolor="blue",

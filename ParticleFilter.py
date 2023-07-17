@@ -48,38 +48,44 @@ class ParticleFilter:
                     # Likelihood calculation, based on P(z|x), z - dist of beacon to robot,
                     # x - dist of particle to beacon
                     particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 50).pdf(data[1])
-                    # TODO This value of 50 should be the var. TBD
 
             # The next line: p(x|z) where z is the measurement and x is the state
             particle.weight *= particle.ParticleLikelihood
 
-            # Normalize the weight
-            particle.weight = particle.weight / self.Particle_SumOfWeights
-
             self.ParticlesWeightsList.append(particle.weight)
-            particle.weight += 1.e-300
 
         self.Particles_SumOfWeights = sum(self.ParticlesWeightsList)
+
+        # Normalize the weight
+        self.ParticlesWeightsList = np.array(self.ParticlesWeightsList) / self.Particles_SumOfWeights
 
     def systematic_resampling(self):
 
         N = self.num_particles
 
         CDF_weights = np.cumsum(self.ParticlesWeightsList)  # Cumulative Sum of weights
+
         u1 = np.random.uniform(1e-10, 1.0 / N, 1)[0]
 
         for j in range(1, N):
-            u_j = u1 + float(j - 1) / N
+            u_j = u1 + float(j-1) / N
             i = 0
 
-            while u_j > CDF_weights[i] and i < 398:
+            while u_j > CDF_weights[i] and i < (N - 2):
                 i += 1
 
-            self.particles[i].weight = (1.0 / N)
             self.ResampledParticles.append(self.particles[i])
+
+        for par in self.ResampledParticles:
+            par.weight = 1 / N
 
         self.particles = self.ResampledParticles
         self.ResampledParticles = []
+
+        self.test_func()
+
+    def calc_n_eff(self):
+        return 1. / np.sum(np.square(self.ParticlesWeightsList))
 
     def estimate_state(self):
         # Compute the estimated state based on the weighted average of particles
@@ -92,6 +98,10 @@ class ParticleFilter:
         var = np.var(ParticlesPosList, axis=0)
         return mean, var
 
+    def test_func(self):
+        for par in self.particles:
+            print(par.pos)
+
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     # This function starts one filter iteration
@@ -99,11 +109,14 @@ def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     ParticleFilterObj.predict(vel_x, vel_y)
     ParticleFilterObj.update_weights(BeaconsDistances)
 
-    ParticleFilterObj.systematic_resampling()
+    if ParticleFilterObj.calc_n_eff() > (ParticleFilterObj.num_particles / 2):
+        ParticleFilterObj.systematic_resampling()
+
+    # ParticleFilterObj.test_func()
 
 
 class Particle:
     def __init__(self, NumOfParticles):
         self.pos = []
-        self.weight = 1 / NumOfParticles
+        self.weight = 1.0 / NumOfParticles
         self.ParticleLikelihood = 1.0
