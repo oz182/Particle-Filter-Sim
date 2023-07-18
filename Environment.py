@@ -31,6 +31,22 @@ class Env:
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
 
+    def generate_random_path(self, start_point, end_point, num_steps):
+        current_point = start_point
+
+        # Calculate the step size for each coordinate
+        step_size_x = (end_point[0] - start_point[0]) / num_steps
+        step_size_y = (end_point[1] - start_point[1]) / num_steps
+
+        for _ in range(num_steps):
+            # Generate random offsets for each coordinate
+            offset_x = random.uniform(0, step_size_x)
+            offset_y = random.uniform(0, step_size_y)
+
+            # Update the current point with the random offsets
+            current_point = (current_point[0] + offset_x, current_point[1] + offset_y)
+            self.PathSteps.append(current_point)
+
     def generate_uniform_random_path(self, NumberOfSteps):
         # The function will generate the waypoints that will eventually build the path. In this function
         # the path is constructed randomly.
@@ -61,7 +77,7 @@ class Env:
                     u_pos = u_attr["pos"]
                     v_pos = v_attr["pos"]
                     distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-                    if distance <= 2.0:  # Adjust the distance threshold as needed
+                    if distance <= 1:  # Adjust the distance threshold as needed
                         G.add_edge(u, v)
 
         # Find the shortest path

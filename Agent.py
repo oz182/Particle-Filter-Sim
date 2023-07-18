@@ -35,7 +35,7 @@ class Agent:
         # Eventually, this function returns a list of the distance from the beacons on the map
         # (and the value 'None' from the far away ones).
         self.BeaconsDistances = []
-        ProxSensorRange = 10
+        ProxSensorRange = 5
         Prox_noise_mean = 0
         Prox_noise_var = 0.4
         ProxSensorNoise = np.random.normal(Prox_noise_mean, np.sqrt(Prox_noise_var))
@@ -47,7 +47,10 @@ class Agent:
         for beacon in self.BeaconsList:
             # The distance between a beacon and the robot is calculated as the normal vector between two points.
             # The command 'norm' can get only numpy array, that why the casting
-            DistFromBeacon = np.linalg.norm((np.array(beacon.pos) - np.array(self.position)))
+
+            # DistFromBeacon = np.linalg.norm(abs(np.array(beacon.pos) - np.array(self.position)))
+            DistFromBeacon = np.power((beacon.pos[0] - self.position[0]) ** 2 + (beacon.pos[1] - self.position[1]) ** 2, 0.5)
+
             if DistFromBeacon <= ProxSensorRange:
                 self.BeaconsDistances.append([beacon.id, (DistFromBeacon + ProxSensorNoise), beacon.pos])
             else:
@@ -64,6 +67,3 @@ class Agent:
         Odometer_noise_var = 0.1
         self.OdometerVel_x = vel_x + np.random.normal(Odometer_noise_mean, np.sqrt(Odometer_noise_var))
         self.OdometerVel_y = vel_y + np.random.normal(Odometer_noise_mean, np.sqrt(Odometer_noise_var))
-
-
-

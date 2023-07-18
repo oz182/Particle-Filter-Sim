@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import mplcyberpunk  # The IDE shows this library as unused but it does used in line 4
 
-TIME_INTERVAL = 0.01  # Global constant
+TIME_INTERVAL = 1  # Global constant
 
 plt.style.use("cyberpunk")
 fig, ax = plt.subplots(figsize=(10, 10))
@@ -23,8 +23,8 @@ def simulation(env, agent, ParticleFilter):
         plt.plot(beacon.x, beacon.y, marker='o', markersize=15, markeredgecolor="black", markerfacecolor="red")
 
     # Plot path
-    for step in env.PathSteps:
-        plt.plot(step[0], step[1], marker='o', markersize=5, markeredgecolor="black", markerfacecolor="green")
+    # for step in env.PathSteps:
+        # plt.plot(step[0], step[1], marker='o', markersize=5, markeredgecolor="black", markerfacecolor="green")
     x_values = []
     y_values = []
     for step in env.PathSteps:
