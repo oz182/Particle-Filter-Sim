@@ -49,7 +49,8 @@ class Agent:
             # The command 'norm' can get only numpy array, that why the casting
 
             # DistFromBeacon = np.linalg.norm(abs(np.array(beacon.pos) - np.array(self.position)))
-            DistFromBeacon = np.power((beacon.pos[0] - self.position[0]) ** 2 + (beacon.pos[1] - self.position[1]) ** 2, 0.5)
+            DistFromBeacon = np.power((beacon.pos[0] - self.position[0]) ** 2 +
+                                      (beacon.pos[1] - self.position[1]) ** 2, 0.5)
 
             if DistFromBeacon <= ProxSensorRange:
                 self.BeaconsDistances.append([beacon.id, (DistFromBeacon + ProxSensorNoise), beacon.pos])
