@@ -16,6 +16,7 @@ class ParticleFilter:
         self.Particles_SumOfWeights = 1.0
         self.map_size = map_size
         self.ParticlesWeightsList = []
+        self.ParticlesPosList = []
 
         self.PartiPos = []
 
@@ -35,10 +36,13 @@ class ParticleFilter:
 
     def update_weights(self, BeaconsDistances):
         # Update the weights based on the observed data.
+        self.ParticlesPosList = []
         self.ParticlesWeightsList = []
         self.Particles_SumOfWeights = 1.0
 
-        for i, particle in self.particles:
+        IsNearBeacon = False
+
+        for particle in self.particles:
             particle.ParticleLikelihood = 1.0  # Initialize particle's likelihood
 
             for data in BeaconsDistances:
@@ -56,21 +60,22 @@ class ParticleFilter:
                     particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 10).pdf(data[1])
                     # particle.ParticleLikelihood *= stats.norm(data[1], 0.4).pdf(Dist_par_beac)
 
-                    # My brain is about to explode from over thinking
+                    IsNearBeacon = True
+
+            if not IsNearBeacon:
+                particle.ParticleLikelihood = 0.0
 
             # The next line: p(x|z) where z is the measurement and x is the state
             particle.weight *= particle.ParticleLikelihood
             particle.weight += 1e-300  # Avoid round-off to zero
-            particle.id = i  # re-initialized id
 
             self.ParticlesWeightsList.append(particle.weight)
+            self.ParticlesPosList.append(particle.pos)
 
         self.Particles_SumOfWeights = sum(self.ParticlesWeightsList)
 
         # Normalize the weights
         self.ParticlesWeightsList = np.array(self.ParticlesWeightsList) / self.Particles_SumOfWeights
-
-
 
     def systematic_resampling(self):
 
@@ -87,13 +92,18 @@ class ParticleFilter:
             while u_j > CDF_weights[i]:
                 i += 1
 
-            self.ResampledParticles.append(self.particles[i])
+            # self.ResampledParticles.append(self.ParticlesPosList[i])
+            self.particles[j].pos = self.ParticlesPosList[i]
+            self.particles[j].weight = 1.0 / N
 
-        for par in self.ResampledParticles:
-            par.weight = 1.0 / N
+    #  ------- Other good tries ------------------
+    # self.particles[j].weight = self.ParticlesWeightsList[i]
 
-        self.particles = self.ResampledParticles
-        self.ResampledParticles = []
+    # for par in self.ResampledParticles:
+    # par.weight = 1.0 / N
+
+    # self.particles = self.ResampledParticles
+    # self.ResampledParticles = []
 
     def calc_n_eff(self):
         return 1. / np.sum(np.square(self.ParticlesWeightsList))
@@ -120,7 +130,7 @@ def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     ParticleFilterObj.predict(vel_x, vel_y)
     ParticleFilterObj.update_weights(BeaconsDistances)
 
-    if ParticleFilterObj.calc_n_eff() <= (ParticleFilterObj.num_particles * 1):
+    if ParticleFilterObj.calc_n_eff() <= (ParticleFilterObj.num_particles * 0.5):
         ParticleFilterObj.systematic_resampling()
 
     # ParticleFilterObj.test_func()
