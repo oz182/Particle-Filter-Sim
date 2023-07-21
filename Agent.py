@@ -37,8 +37,8 @@ class Agent:
         self.BeaconsDistances = []
         ProxSensorRange = 5
         Prox_noise_mean = 0
-        Prox_noise_var = 0.4
-        ProxSensorNoise = np.random.normal(Prox_noise_mean, np.sqrt(Prox_noise_var))
+        Prox_noise_var = 1
+        ProxSensorNoise = np.random.normal(Prox_noise_mean, Prox_noise_var)
 
         # This part of the function, updates the self values of the agent's object.
         # It creates a list of beacons id and distance in the following form: ([id, dist, pos], [is, dist, pos], ..)
@@ -65,6 +65,6 @@ class Agent:
 
         #  The odometer reading with the given noise added: a zero-mean Gaussian with variance 0.1.
         Odometer_noise_mean = 0
-        Odometer_noise_var = 0.1
-        self.OdometerVel_x = vel_x + np.random.normal(Odometer_noise_mean, np.sqrt(Odometer_noise_var))
-        self.OdometerVel_y = vel_y + np.random.normal(Odometer_noise_mean, np.sqrt(Odometer_noise_var))
+        Odometer_noise_var = 1
+        self.OdometerVel_x = vel_x + np.random.normal(Odometer_noise_mean, Odometer_noise_var)
+        self.OdometerVel_y = vel_y + np.random.normal(Odometer_noise_mean, Odometer_noise_var)

@@ -1,5 +1,6 @@
 # A particle will be defined as an object.
 # The attributes and function will be described below
+import random
 
 import numpy as np
 from numpy.random import uniform
@@ -31,16 +32,14 @@ class ParticleFilter:
     def predict(self, vel_x, vel_y):
         # Update the particles based on the agent's movement
         for par in self.particles:
-            par.pos[0] += vel_x * TIME_INTERVAL
-            par.pos[1] += vel_y * TIME_INTERVAL
+            par.pos[0] += (vel_x + np.random.normal(0, 2)) * TIME_INTERVAL
+            par.pos[1] += (vel_y + np.random.normal(0, 2)) * TIME_INTERVAL
 
     def update_weights(self, BeaconsDistances):
         # Update the weights based on the observed data.
         self.ParticlesPosList = []
         self.ParticlesWeightsList = []
         self.Particles_SumOfWeights = 1.0
-
-        IsNearBeacon = False
 
         for particle in self.particles:
             particle.ParticleLikelihood = 1.0  # Initialize particle's likelihood
@@ -57,13 +56,7 @@ class ParticleFilter:
 
                     # Likelihood calculation, based on p(z|x), z - dist of beacon to robot,
                     # x - dist of particle to beacon
-                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 10).pdf(data[1])
-                    # particle.ParticleLikelihood *= stats.norm(data[1], 0.4).pdf(Dist_par_beac)
-
-                    IsNearBeacon = True
-
-            if not IsNearBeacon:
-                particle.ParticleLikelihood = 0.0
+                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 15).pdf(data[1])
 
             # The next line: p(x|z) where z is the measurement and x is the state
             particle.weight *= particle.ParticleLikelihood
@@ -76,25 +69,25 @@ class ParticleFilter:
 
         # Normalize the weights
         self.ParticlesWeightsList = np.array(self.ParticlesWeightsList) / self.Particles_SumOfWeights
+        print(self.ParticlesWeightsList)
 
     def systematic_resampling(self):
 
         N = self.num_particles
 
         CDF_weights = np.cumsum(self.ParticlesWeightsList)  # Cumulative Sum of weights
-        u1 = np.random.uniform(0, 1.0 / N, 1)[0]
-
+        u1 = np.random.uniform(0, 1.0/N, 1)[0]
         i = 0
 
         for j in range(0, N):
-            u_j = u1 + (float(j) / N)
+            u_j = u1 + float(j) / N
 
             while u_j > CDF_weights[i]:
                 i += 1
 
             # self.ResampledParticles.append(self.ParticlesPosList[i])
             self.particles[j].pos = self.ParticlesPosList[i]
-            self.particles[j].weight = 1.0 / N
+            self.particles[j].weight = 1.0  # In the literature, the weights are redefined to 1/N
 
     #  ------- Other good tries ------------------
     # self.particles[j].weight = self.ParticlesWeightsList[i]
@@ -106,7 +99,7 @@ class ParticleFilter:
     # self.ResampledParticles = []
 
     def calc_n_eff(self):
-        return 1. / np.sum(np.square(self.ParticlesWeightsList))
+        return 1. / np.sum(np.square(np.array(self.ParticlesWeightsList)))
 
     def estimate_state(self):
         # Compute the estimated state based on the weighted average of particles
