@@ -31,6 +31,22 @@ class Env:
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
 
+    def generate_random_path(self, start_point, end_point, num_steps):
+        current_point = start_point
+
+        # Calculate the step size for each coordinate
+        step_size_x = (end_point[0] - start_point[0]) / num_steps
+        step_size_y = (end_point[1] - start_point[1]) / num_steps
+
+        for _ in range(num_steps):
+            # Generate random offsets for each coordinate
+            offset_x = random.uniform(0, step_size_x)
+            offset_y = random.uniform(0, step_size_y)
+
+            # Update the current point with the random offsets
+            current_point = (current_point[0] + offset_x, current_point[1] + offset_y)
+            self.PathSteps.append(current_point)
+
     def generate_uniform_random_path(self, NumberOfSteps):
         # The function will generate the waypoints that will eventually build the path. In this function
         # the path is constructed randomly.
@@ -61,7 +77,7 @@ class Env:
                     u_pos = u_attr["pos"]
                     v_pos = v_attr["pos"]
                     distance = ((u_pos[0] - v_pos[0]) ** 2 + (u_pos[1] - v_pos[1]) ** 2) ** 0.5
-                    if distance <= 1.0:  # Adjust the distance threshold as needed
+                    if distance <= 1:  # Adjust the distance threshold as needed
                         G.add_edge(u, v)
 
         # Find the shortest path
@@ -75,12 +91,47 @@ class Env:
         self.EndTerminal = (Bx, By)
         pass
 
+    def set_pre_defined_beacons(self):  # Sets pre-defined beacons location
+        beacon_obj1 = beacon(1, 3, 8)
+        self.beacons.append(beacon_obj1)
+        beacon_obj2 = beacon(2, 4, 8)
+        self.beacons.append(beacon_obj2)
+        beacon_obj3 = beacon(3, 2, 6)
+        self.beacons.append(beacon_obj3)
+        beacon_obj4 = beacon(4, 7, 6)
+        self.beacons.append(beacon_obj4)
+        beacon_obj5 = beacon(5, 5, 9)
+        self.beacons.append(beacon_obj5)
+        beacon_obj6 = beacon(6, 4, 6)
+        self.beacons.append(beacon_obj6)
+        beacon_obj7 = beacon(7, 5, 4)
+        self.beacons.append(beacon_obj7)
+        beacon_obj8 = beacon(8, 5, 6)
+        self.beacons.append(beacon_obj8)
+        beacon_obj9 = beacon(9, 3, 2)
+        self.beacons.append(beacon_obj9)
+        beacon_obj10 = beacon(10, 5, 3)
+        self.beacons.append(beacon_obj10)
+
+    def set_pre_defined_path(self):  # A constant path (The path needs to cross 50% of the beacons)
+        self.PathSteps.append([1, 2])
+        self.PathSteps.append([4, 3])
+        self.PathSteps.append([4, 3])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+        self.PathSteps.append([8, 8])
+
 
 class beacon:
     def __init__(self, id_number, x, y):
         self.id = id_number
         self.x = x
         self.y = y
+        self.pos = [self.x, self.y]
 
 
 class path:

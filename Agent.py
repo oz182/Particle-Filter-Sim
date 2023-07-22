@@ -10,16 +10,17 @@
 
 import numpy as np
 
-from main import TIME_INTERVAL
+from Simulation import TIME_INTERVAL
 
 
 class Agent:
     def __init__(self, initial_position, BeaconsList, PathSteps):
         self.position = list(initial_position)
-        self.OdometerVel = 20
+        self.OdometerVel_x = 0
+        self.OdometerVel_y = 0
         self.BeaconsList = BeaconsList
-        self.DistFromBeacons = []
-        self.PathSteps = PathSteps
+        self.BeaconsDistances = []
+        self.PathSteps = PathSteps  # A list contains the step's coordinates on the path
         self.PositionInPath = 0
 
     def move(self):
@@ -27,19 +28,43 @@ class Agent:
         self.position[1] = self.PathSteps[self.PositionInPath][1]
 
         self.PositionInPath += 1
-        # self.position[0] += (self.OdometerVel * TIME_INTERVAL)
-        # self.position[1] += (self.OdometerVel * TIME_INTERVAL)
 
-    def acquire_sensors_data(self):
-        # Simulate sensing the agent's position by adding noise
-        # Moreover, sense all the other data (speed, distance from waypoints)
+    def proximity_reading(self):
+        # Simulate the proximity sensor data, with noise Reading.
+        # can be acquire only if the beacon is in the proximity sensor's range (define to be 2 in the assignment)
+        # Eventually, this function returns a list of the distance from the beacons on the map
+        # (and the value 'None' from the far away ones).
+        self.BeaconsDistances = []
+        ProxSensorRange = 5
+        Prox_noise_mean = 0
+        Prox_noise_var = 0.4
+        ProxSensorNoise = np.random.normal(Prox_noise_mean, Prox_noise_var)
 
-        true_position = self.position
-        sensed_position = np.random.normal(loc=true_position, scale=[0.1, 0.1])  # Example noise
+        # This part of the function, updates the self values of the agent's object.
+        # It creates a list of beacons id and distance in the following form: ([id, dist, pos], [is, dist, pos], ..)
+        # This list will be under the attribute self.BeaconsDistances
 
         for beacon in self.BeaconsList:
-            # distance = agent.measure_distance(waypoint)
-            # waypoint_distances.append(distance)
-            pass
+            # The distance between a beacon and the robot is calculated as the normal vector between two points.
+            # The command 'norm' can get only numpy array, that why the casting
 
-        return sensed_position
+            # DistFromBeacon = np.linalg.norm(abs(np.array(beacon.pos) - np.array(self.position)))
+            DistFromBeacon = np.power((beacon.pos[0] - self.position[0]) ** 2 +
+                                      (beacon.pos[1] - self.position[1]) ** 2, 0.5)
+
+            if DistFromBeacon <= ProxSensorRange:
+                self.BeaconsDistances.append([beacon.id, (DistFromBeacon + ProxSensorNoise), beacon.pos])
+            else:
+                self.BeaconsDistances.append([beacon.id, None, beacon.pos])
+
+    def odometer_reading(self):
+        #  Get the velocity by the equation: (Current_pos - Prev_pos) / dt
+        #  Integral on the delta position
+        vel_x = (self.PathSteps[self.PositionInPath][0] - self.PathSteps[self.PositionInPath - 1][0]) / TIME_INTERVAL
+        vel_y = (self.PathSteps[self.PositionInPath][1] - self.PathSteps[self.PositionInPath - 1][1]) / TIME_INTERVAL
+
+        #  The odometer reading with the given noise added: a zero-mean Gaussian with variance 0.1.
+        Odometer_noise_mean = 0
+        Odometer_noise_var = 0.1
+        self.OdometerVel_x = vel_x + np.random.normal(Odometer_noise_mean, Odometer_noise_var)
+        self.OdometerVel_y = vel_y + np.random.normal(Odometer_noise_mean, Odometer_noise_var)
