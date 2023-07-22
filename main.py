@@ -20,7 +20,7 @@ def arrived_to_goal(robot, env):
 def main():
     # Create a new environment, add obstacles and goal.
     envFrame = Env(40, 30)
-    envFrame.set_terminals(1000+5, 1000+5, 1000+38, 1000+28)  # Ax, Ay, Bx,
+    envFrame.set_terminals(5, 5, 38, 28)  # Ax, Ay, Bx,
 
     envFrame.generate_uniform_random_beacons(10)  # from the assignment: 10 beacons
     # envFrame.set_pre_defined_beacons()
@@ -35,10 +35,12 @@ def main():
     PF = ParticleFilter(1000, [envFrame.width, envFrame.height])
     PF.initialize_particles()
 
-    simulation(envFrame, robot, PF)
+    Iter = 0
+    simulation(envFrame, robot, PF, Iter)
     # The main algorithm loop
     # In this loop the agent is moving along the path, and its position is estimated using the
     # particle filter algorithm.
+
     while not arrived_to_goal(robot, envFrame):
         robot.move()  # move the robot along the path
 
@@ -47,11 +49,16 @@ def main():
 
         # Estimate position using particle filter - function "run_pf_iteration"
         # Gets the filter object, and sensors measurements - Odometer data, and distance from all the beacons.
-        PF.predict(robot.OdometerVel_x, robot.OdometerVel_y)
-        simulation(envFrame, robot, PF)
+
+        # I've separated the predict function with a simulation if it is needed to show between resampling steps
+        # PF.predict(robot.OdometerVel_x, robot.OdometerVel_y)
+        # simulation(envFrame, robot, PF)
+
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances)
 
-        simulation(envFrame, robot, PF)
+        simulation(envFrame, robot, PF, Iter)
+
+        Iter += 1
 
         # input("Press any key to continue>>>")  # Uncomment to control iterations
 

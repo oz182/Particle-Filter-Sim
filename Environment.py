@@ -25,8 +25,8 @@ class Env:
         # In the assignment, I've been asked to generate the beacons in a uniform density over a rectangular region
 
         for i in range(NumberOfBeacons):
-            x_pos = random.uniform(1000+1, 1000+self.width - 1)
-            y_pos = random.uniform(1000+1, 1000+self.height - 1)
+            x_pos = random.uniform(1, self.width - 1)
+            y_pos = random.uniform(1, self.height - 1)
 
             beacon_obj = beacon(i, x_pos, y_pos)  # 'i' serves as the id of the beacon
             self.beacons.append(beacon_obj)
@@ -40,8 +40,8 @@ class Env:
 
         for _ in range(num_steps):
             # Generate random offsets for each coordinate
-            offset_x = random.uniform(1000+0, 1000+step_size_x)
-            offset_y = random.uniform(1000+0, 1000+step_size_y)
+            offset_x = random.uniform(0, step_size_x)
+            offset_y = random.uniform(0, step_size_y)
 
             # Update the current point with the random offsets
             current_point = (current_point[0] + offset_x, current_point[1] + offset_y)
@@ -54,8 +54,8 @@ class Env:
         TempSteps = []
 
         for i in range(NumberOfSteps):
-            x_pos = random.uniform(1000+0, 1000+self.width)
-            y_pos = random.uniform(1000+0, 1000+self.height)
+            x_pos = random.uniform(0, self.width)
+            y_pos = random.uniform(0, self.height)
 
             Step = [x_pos, y_pos]
             TempSteps.append(Step)

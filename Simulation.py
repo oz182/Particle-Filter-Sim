@@ -7,10 +7,15 @@ plt.style.use("cyberpunk")
 fig, ax = plt.subplots(figsize=(10, 10))
 
 
-def simulation(env, agent, ParticleFilter):
+def simulation(env, agent, ParticleFilter, Iter):
     ax.clear()
-    ax.set_xlim([970, 1000+env.width+20])
-    ax.set_ylim([970, 1000+env.height+20])
+    ax.set_xlim([0, env.width])
+    ax.set_ylim([0, env.height])
+
+    # Plot particles
+    for particle in ParticleFilter.particles:
+        plt.plot(particle.pos[0], particle.pos[1], marker='o', markersize=1, markeredgecolor="white",
+                 markerfacecolor="red")
 
     # Plot the terminals
     plt.plot(env.StartTerminal[0], env.StartTerminal[1], marker="s", markersize=10, markeredgecolor="blue",
@@ -36,14 +41,13 @@ def simulation(env, agent, ParticleFilter):
     plt.plot(agent.position[0], agent.position[1], marker='*', markersize=10, markeredgecolor="red",
              markerfacecolor="yellow")
 
-    # Plot particles
-    for particle in ParticleFilter.particles:
-        plt.plot(particle.pos[0], particle.pos[1], marker='o', markersize=1, markeredgecolor="white",
-                 markerfacecolor="red")
-
     ax.minorticks_on()
     ax.grid(which='major', color='#000000', linestyle='--', alpha=0.5)
     ax.grid(which='minor', color='#000000', linestyle=':', alpha=0.4)
     # mplcyberpunk.add_glow_effects()  # This line makes some weird color effect... Unnecessary
     plt.draw()
     plt.pause(0.01)
+
+    frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
+    fig.savefig(frame_path)
+
