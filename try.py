@@ -44,11 +44,12 @@ def mouseCallback(event, x, y, flags, null):
 
         distance = np.linalg.norm(np.array([[previous_x, previous_y]]) - np.array([[x, y]]), axis=1)
 
-        std = np.array([2, 4])
+        std = np.array([2, 8])
         u = np.array([heading, distance])
         predict(particles, u, std, dt=1.)
         zs = (np.linalg.norm(landmarks - center, axis=1) + (np.random.randn(NL) * sensor_std_err))
         update(particles, weights, z=zs, R=50, landmarks=landmarks)
+        print(weights.mean())
 
         indexes = systematic_resample(weights)
         resample_from_index(particles, weights, indexes)
@@ -86,6 +87,7 @@ def update(particles, weights, z, R, landmarks):
     for i, landmark in enumerate(landmarks):
         distance = np.power((particles[:, 0] - landmark[0]) ** 2 + (particles[:, 1] - landmark[1]) ** 2, 0.5)
         weights *= scipy.stats.norm(distance, 20).pdf(z[i])
+
 
 
     weights += 1.e-300  # avoid round-off to zero
@@ -129,7 +131,7 @@ x_range = np.array([0, 800])
 y_range = np.array([0, 600])
 
 # Number of partciles
-N = 400
+N = 10
 
 landmarks = np.array([[144, 73], [410, 13], [336, 175], [718, 159], [178, 484], [665, 464]])
 NL = len(landmarks)

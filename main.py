@@ -20,7 +20,7 @@ def arrived_to_goal(robot, env):
 def main():
     # Create a new environment, add obstacles and goal.
     envFrame = Env(40, 30)
-    envFrame.set_terminals(5, 5, 38, 28)  # Ax, Ay, Bx,
+    envFrame.set_terminals(1000+5, 1000+5, 1000+38, 1000+28)  # Ax, Ay, Bx,
 
     envFrame.generate_uniform_random_beacons(10)  # from the assignment: 10 beacons
     # envFrame.set_pre_defined_beacons()
@@ -47,11 +47,12 @@ def main():
 
         # Estimate position using particle filter - function "run_pf_iteration"
         # Gets the filter object, and sensors measurements - Odometer data, and distance from all the beacons.
+        PF.predict(robot.OdometerVel_x, robot.OdometerVel_y)
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances)
 
         simulation(envFrame, robot, PF)
 
-        input("Press any key to continue>>>")  # Uncomment to control iterations
+        # input("Press any key to continue>>>")  # Uncomment to control iterations
 
     print("The agent has reached the target!!")
     plt.show()  # Make the graph stay on the screen after the simulation has ended
