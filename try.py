@@ -86,13 +86,12 @@ def update(particles, weights, z, R, landmarks):
     weights.fill(1.)
     for i, landmark in enumerate(landmarks):
         distance = np.power((particles[:, 0] - landmark[0]) ** 2 + (particles[:, 1] - landmark[1]) ** 2, 0.5)
-        weights *= scipy.stats.norm(distance, 20).pdf(z[i])
+        weights *= scipy.stats.norm(distance, 50).pdf(z[i])
 
 
 
     weights += 1.e-300  # avoid round-off to zero
     weights /= sum(weights)
-    print(weights)
 
 def neff(weights):
     return 1. / np.sum(np.square(weights))
@@ -123,6 +122,7 @@ def estimate(particles, weights):
 
 def resample_from_index(particles, weights, indexes):
     particles[:] = particles[indexes]
+    print(particles)
     weights[:] = weights[indexes]
     weights /= np.sum(weights)
 
@@ -131,7 +131,7 @@ x_range = np.array([0, 800])
 y_range = np.array([0, 600])
 
 # Number of partciles
-N = 10
+N = 1000
 
 landmarks = np.array([[144, 73], [410, 13], [336, 175], [718, 159], [178, 484], [665, 464]])
 NL = len(landmarks)

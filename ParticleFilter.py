@@ -26,15 +26,16 @@ class ParticleFilter:
         for _ in range(self.num_particles):
             particle = Particle(self.num_particles)
             # Uniform distribution around the map size
-            particle.pos = np.random.uniform(low=[980+0, 980+0], high=[1000+self.map_size[0], 1000+self.map_size[1]])
+            particle.pos = np.random.uniform(low=[980 + 0, 980 + 0],
+                                             high=[1000 + self.map_size[0], 1000 + self.map_size[1]])
             # particle.pos = np.random.uniform(low=[0, 0], high=[10, 10])
             self.particles.append(particle)
 
     def predict(self, vel_x, vel_y):
         # Update the particles based on the agent's movement
-        for par in self.particles:
-            par.pos[0] += (vel_x + np.random.normal(0, 2)) * TIME_INTERVAL
-            par.pos[1] += (vel_y + np.random.normal(0, 2)) * TIME_INTERVAL
+        for i, par in enumerate(self.particles):
+            par.pos[0] += (vel_x + np.random.normal(0, 1)) * TIME_INTERVAL
+            par.pos[1] += (vel_y + np.random.normal(0, 1)) * TIME_INTERVAL
 
     def update_weights(self, BeaconsDistances):
         # Update the weights based on the observed data.
@@ -58,7 +59,7 @@ class ParticleFilter:
 
                     # Likelihood calculation, based on p(z|x), z - dist of beacon to robot,
                     # x - dist of particle to beacon
-                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 5).pdf(data[1])
+                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 10).pdf(data[1])
 
             # The next line: p(x|z) where z is the measurement and x is the state
             particle.weight *= particle.ParticleLikelihood
@@ -77,17 +78,18 @@ class ParticleFilter:
         N = self.num_particles
 
         CDF_weights = np.cumsum(self.ParticlesWeightsList)  # Cumulative Sum of weights
-        u1 = np.random.uniform(0, 1.0/N, 1)[0]
+        # u1 = np.random.uniform(0, 1.0/N, 1)[0]
+        u1 = np.random.random() / N
         i = 0
 
-        for j in range(0, N-1):
+        for j in range(0, N - 1):
             u_j = u1 + float(j) / N
 
             while u_j > CDF_weights[i]:
                 i += 1
 
             # self.ResampledParticles.append(self.ParticlesPosList[i])
-            self.particles[j].pos = self.ParticlesPosList[i]
+            self.particles[j].pos = self.ParticlesPosList[i] + (i*1e-300)
             self.particles[j].weight = 1.0  # In the literature, the weights are redefined to 1/N
 
     #  ------- Other good tries ------------------
@@ -121,13 +123,13 @@ class ParticleFilter:
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     # This function starts one filter iteration
 
-    #ParticleFilterObj.predict(vel_x, vel_y)
+    # ParticleFilterObj.predict(vel_x, vel_y)  # Calling from main
     ParticleFilterObj.update_weights(BeaconsDistances)
 
-    print(ParticleFilterObj.calc_n_eff())
-    if ParticleFilterObj.calc_n_eff() >= (ParticleFilterObj.num_particles * 0.15):
-        ParticleFilterObj.systematic_resampling()
-        print('Resampled')
+    # if ParticleFilterObj.calc_n_eff() >= (ParticleFilterObj.num_particles * 0.3):
+    # ParticleFilterObj.systematic_resampling()
+
+    ParticleFilterObj.systematic_resampling()
 
     # ParticleFilterObj.test_func()
 

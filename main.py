@@ -48,6 +48,7 @@ def main():
         # Estimate position using particle filter - function "run_pf_iteration"
         # Gets the filter object, and sensors measurements - Odometer data, and distance from all the beacons.
         PF.predict(robot.OdometerVel_x, robot.OdometerVel_y)
+        simulation(envFrame, robot, PF)
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances)
 
         simulation(envFrame, robot, PF)
