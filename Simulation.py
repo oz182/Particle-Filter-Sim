@@ -29,7 +29,7 @@ def simulation(env, agent, ParticleFilter, Iter):
 
     # Plot path
     # for step in env.PathSteps:
-        # plt.plot(step[0], step[1], marker='o', markersize=5, markeredgecolor="black", markerfacecolor="green")
+    # plt.plot(step[0], step[1], marker='o', markersize=5, markeredgecolor="black", markerfacecolor="green")
     x_values = []
     y_values = []
     for step in env.PathSteps:
@@ -48,6 +48,14 @@ def simulation(env, agent, ParticleFilter, Iter):
     plt.draw()
     plt.pause(0.01)
 
-    frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
-    fig.savefig(frame_path)
+    # Activate for saving the figures of the simulation
+    # frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
+    # fig.savefig(frame_path)
 
+
+def simulate_mse(agent, ParticleFilter):
+
+    MSE = abs(ParticleFilter.ParticlesMean - agent.position)
+    print(MSE)
+
+    pass

@@ -18,7 +18,8 @@ class ParticleFilter:
         self.ParticlesWeightsList = []
         self.ParticlesPosList = []
 
-        self.PartiPos = []
+        self.ParticlesMean = 0
+        self.ParticlesVar = 0
 
     def initialize_particles(self):
         # Initialize the particles randomly within the map boundaries
@@ -81,7 +82,7 @@ class ParticleFilter:
         N = self.num_particles
 
         CDF_weights = np.cumsum(self.ParticlesWeightsList)  # Cumulative Sum of weights
-        u1 = np.random.uniform(0, 1.0/N, 1)[0]
+        u1 = np.random.uniform(0, 1.0 / N, 1)[0]
         i = 0
 
         for j in range(0, N - 1):
@@ -91,7 +92,7 @@ class ParticleFilter:
                 i += 1
 
             # self.ResampledParticles.append(self.ParticlesPosList[i])
-            self.particles[j].pos = self.ParticlesPosList[i] + (i*1e-300)  # This addition is only to over come the
+            self.particles[j].pos = self.ParticlesPosList[i] + (i * 1e-300)  # This addition is only to over come the
             # object for loop bug in the prediction function (Explanation in the function).
             self.particles[j].weight = 1.0 / N  # In the literature, the weights are redefined to 1/N
 
@@ -109,23 +110,21 @@ class ParticleFilter:
         var = np.var(ParticlesPosList, axis=0)
         return mean, var
 
-    def test_func(self):
-        for par in self.particles:
-            print(par.pos)
-
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     # This function starts one filter iteration
 
     ParticleFilterObj.predict(vel_x, vel_y)  # Can be called from main
     ParticleFilterObj.update_weights(BeaconsDistances)
+
     """ The part of the N_eff test, turns out to be not so relevant in my case
     if ParticleFilterObj.calc_n_eff() >= (ParticleFilterObj.num_particles * 0.5):
         ParticleFilterObj.systematic_resampling()
     """
     ParticleFilterObj.systematic_resampling()
 
-    # ParticleFilterObj.test_func()
+    # Measure the mean position of the particles, and the variation
+    ParticleFilterObj.ParticlesMean, ParticleFilterObj.ParticlesVar = ParticleFilterObj.estimate_state()
 
 
 class Particle:
