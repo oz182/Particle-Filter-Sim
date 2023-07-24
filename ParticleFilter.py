@@ -101,14 +101,12 @@ class ParticleFilter:
 
     def estimate_state(self):
         # Compute the estimated state based on the weighted average of particles
-        # For now it is used only in the 'simple_resample' function
         ParticlesPosList = []
         for par in self.particles:
             ParticlesPosList.append(par.pos)
 
         mean = np.average(ParticlesPosList, weights=self.ParticlesWeightsList, axis=0)
         var = np.var(ParticlesPosList, axis=0)
-        return mean, var
 
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):

@@ -53,9 +53,10 @@ def simulation(env, agent, ParticleFilter, Iter):
     # fig.savefig(frame_path)
 
 
-def simulate_mse(agent, ParticleFilter):
+def simulate_error_and_estimated_path(agent, ParticleFilter):
+    MeanError = np.linalg.norm(abs(np.array(ParticleFilter.ParticlesMean) - np.array(agent.position)))
+    EstimatePos = abs(ParticleFilter.ParticlesMean - agent.position)
 
-    MSE = abs(ParticleFilter.ParticlesMean - agent.position)
-    print(MSE)
+    # Plot the estimated position as a trajectory
 
-    pass
+    print(MeanError)
