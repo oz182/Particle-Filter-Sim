@@ -66,7 +66,7 @@ def simulation(env, agent, ParticleFilter, Iter):
     # fig.savefig(frame_path)
 
 
-def sim_squared_error_in_time(ParticleFilter):
-    fig1, ax1 = plt.subplots(figsize=(6, 6))
+def sim_squared_error_in_time(ParticleFilter, Iter):
+    fig1, ax1 = plt.subplots(figsize=(12, 4))
 
-    plt.plot(ParticleFilter.SquaredErrorList)
+    plt.plot(list(range(Iter)), ParticleFilter.SquaredErrorList, 'red')
