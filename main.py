@@ -59,11 +59,14 @@ def main():
         simulation(envFrame, robot, PF, Iter)
 
         Iter += 1
+        print('Iteration number: ', Iter)
 
         # input("Press any key to continue>>>")  # Uncomment to control iterations
 
     print("The agent has reached the target!!")
     plt.show()  # Make the graph stay on the screen after the simulation has ended
+
+    sim_squared_error_in_time(PF)
 
 
 if __name__ == "__main__":

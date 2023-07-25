@@ -52,6 +52,8 @@ def simulation(env, agent, ParticleFilter, Iter):
         y_values[0] = env.StartTerminal[1]
         plt.plot(x_values, y_values, 'red')
 
+    # Plot a new graph of the Squared error over time
+
     ax.minorticks_on()
     ax.grid(which='major', color='#000000', linestyle='--', alpha=0.5)
     ax.grid(which='minor', color='#000000', linestyle=':', alpha=0.4)
@@ -62,3 +64,9 @@ def simulation(env, agent, ParticleFilter, Iter):
     # Activate for saving the figures of the simulation
     # frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
     # fig.savefig(frame_path)
+
+
+def sim_squared_error_in_time(ParticleFilter):
+    fig1, ax1 = plt.subplots(figsize=(6, 6))
+
+    plt.plot(ParticleFilter.SquaredErrorList)

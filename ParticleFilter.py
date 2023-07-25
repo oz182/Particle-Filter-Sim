@@ -23,7 +23,8 @@ class ParticleFilter:
         self.ParticlesVarPos = 0
         self.IsResampled = False
 
-        self.MeanError = 0
+        self.SquaredError = 0
+        self.SquaredErrorList = []
         self.MSE = 0  # Refers to Mean square error
 
     def initialize_particles(self):
@@ -114,7 +115,8 @@ class ParticleFilter:
 
         self.ParticlesVarPos = np.var((np.array(self.ParticlesPosList)), axis=0)  # Not sure if this value is needed
 
-        self.MeanError = np.linalg.norm(self.ParticlesMeanPos - np.array(RobotPos))
+        self.SquaredError = np.linalg.norm(self.ParticlesMeanPos - np.array(RobotPos)) ** 2
+        self.SquaredErrorList.append(self.SquaredError)
 
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances, RobotPos):
