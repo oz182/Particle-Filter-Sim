@@ -22,8 +22,8 @@ def main():
     envFrame = Env(40, 30)
     envFrame.set_terminals(5, 5, 38, 28)  # Ax, Ay, Bx,
 
-    envFrame.generate_uniform_random_beacons(10)  # from the assignment: 10 beacons
-    # envFrame.set_pre_defined_beacons()
+    # envFrame.generate_uniform_random_beacons(10)  # from the assignment: 10 beacons
+    envFrame.set_pre_defined_beacons()
 
     envFrame.generate_uniform_random_path(4000)  # Input number of waypoints for the path
     # envFrame.set_pre_defined_path()
@@ -51,12 +51,10 @@ def main():
         # Gets the filter object, and sensors measurements - Odometer data, and distance from all the beacons.
 
         # I've separated the predict function with a simulation if it is needed to show between resampling steps
-        # PF.predict(robot.OdometerVel_x, robot.OdometerVel_y)
-        # simulation(envFrame, robot, PF)
 
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances, robot.position)
 
-        # simulation(envFrame, robot, PF, Iter)
+        simulation(envFrame, robot, PF, Iter)
 
         Iter += 1
         print('Iteration number: ', Iter)
