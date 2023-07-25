@@ -41,16 +41,16 @@ def simulation(env, agent, ParticleFilter, Iter):
     plt.plot(agent.position[0], agent.position[1], marker='*', markersize=10, markeredgecolor="red",
              markerfacecolor="yellow")
 
-    # Plot the estimated position as a trajectory
-    x_values = []
-    y_values = []
-
-    for i, step in enumerate(ParticleFilter.ParticlesMeanPosList):
-        x_values.append(step[0])
-        y_values.append(step[1])
-    x_values[0] = env.StartTerminal[0]
-    y_values[0] = env.StartTerminal[1]
-    plt.plot(x_values, y_values, 'red')
+    # Plot the estimated position as a trajectory, only the algorithm resampled - avoid ugly line from first iteration.
+    if ParticleFilter.IsResampled:
+        x_values = [0]
+        y_values = [0]
+        for i, step in enumerate(ParticleFilter.ParticlesMeanPosList):
+            x_values.append(step[0])
+            y_values.append(step[1])
+        x_values[0] = env.StartTerminal[0]
+        y_values[0] = env.StartTerminal[1]
+        plt.plot(x_values, y_values, 'red')
 
     ax.minorticks_on()
     ax.grid(which='major', color='#000000', linestyle='--', alpha=0.5)

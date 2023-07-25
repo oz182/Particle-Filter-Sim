@@ -21,6 +21,7 @@ class ParticleFilter:
         self.ParticlesMeanPos = 0
         self.ParticlesMeanPosList = []
         self.ParticlesVarPos = 0
+        self.IsResampled = False
 
         self.MeanError = 0
         self.MSE = 0  # Refers to Mean square error
@@ -58,7 +59,7 @@ class ParticleFilter:
             for data in BeaconsDistances:
                 if data[1] is not None:
                     # 'data' is a list inside the 'BeaconsDistances' list.
-                    # This list structure (data) is: [ [id,dist,pos], [], ... ] (dist - robot to beacon)
+                    # This list structure (data) is: [ [id,dist,pos], [], ... ] (dist = robot to beacon)
                     # dist of particle to beacon:
 
                     # Dist_par_beac = np.linalg.norm(abs(np.array(particle.pos) - np.array(data[2])))
@@ -69,7 +70,7 @@ class ParticleFilter:
                     # x - dist of particle to beacon
                     particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 1).pdf(data[1])
 
-            # The next line: p(x|z) where z is the measurement and x is the state
+            # The weight calculation
             particle.weight *= particle.ParticleLikelihood
             particle.weight += 1e-300  # Avoid round-off to zero
 
@@ -99,6 +100,8 @@ class ParticleFilter:
             self.particles[j].pos = self.ParticlesPosList[i] + (i * 1e-300)  # This addition is only to over come the
             # object for loop bug in the prediction function (Explanation in the function).
             self.particles[j].weight = 1.0 / N  # In the literature, the weights are redefined to 1/N
+
+        self.IsResampled = True
 
     def calc_n_eff(self):
         return 1. / np.sum(np.square(np.array(self.ParticlesWeightsList)))
