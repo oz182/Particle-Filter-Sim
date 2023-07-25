@@ -41,6 +41,17 @@ def simulation(env, agent, ParticleFilter, Iter):
     plt.plot(agent.position[0], agent.position[1], marker='*', markersize=10, markeredgecolor="red",
              markerfacecolor="yellow")
 
+    # Plot the estimated position as a trajectory
+    x_values = []
+    y_values = []
+
+    for i, step in enumerate(ParticleFilter.ParticlesMeanPosList):
+        x_values.append(step[0])
+        y_values.append(step[1])
+    x_values[0] = env.StartTerminal[0]
+    y_values[0] = env.StartTerminal[1]
+    plt.plot(x_values, y_values, 'red')
+
     ax.minorticks_on()
     ax.grid(which='major', color='#000000', linestyle='--', alpha=0.5)
     ax.grid(which='minor', color='#000000', linestyle=':', alpha=0.4)
@@ -51,12 +62,3 @@ def simulation(env, agent, ParticleFilter, Iter):
     # Activate for saving the figures of the simulation
     # frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
     # fig.savefig(frame_path)
-
-
-def simulate_error_and_estimated_path(agent, ParticleFilter):
-    MeanError = np.linalg.norm(abs(np.array(ParticleFilter.ParticlesMean) - np.array(agent.position)))
-    EstimatePos = abs(ParticleFilter.ParticlesMean - agent.position)
-
-    # Plot the estimated position as a trajectory
-
-    print(MeanError)

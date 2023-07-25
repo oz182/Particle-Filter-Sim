@@ -18,8 +18,12 @@ class ParticleFilter:
         self.ParticlesWeightsList = []
         self.ParticlesPosList = []
 
-        self.ParticlesMean = 0
-        self.ParticlesVar = 0
+        self.ParticlesMeanPos = 0
+        self.ParticlesMeanPosList = []
+        self.ParticlesVarPos = 0
+
+        self.MeanError = 0
+        self.MSE = 0  # Refers to Mean square error
 
     def initialize_particles(self):
         # Initialize the particles randomly within the map boundaries
@@ -99,17 +103,18 @@ class ParticleFilter:
     def calc_n_eff(self):
         return 1. / np.sum(np.square(np.array(self.ParticlesWeightsList)))
 
-    def estimate_state(self):
+    def estimate_state(self, RobotPos):
         # Compute the estimated state based on the weighted average of particles
-        ParticlesPosList = []
-        for par in self.particles:
-            ParticlesPosList.append(par.pos)
 
-        mean = np.average(ParticlesPosList, weights=self.ParticlesWeightsList, axis=0)
-        var = np.var(ParticlesPosList, axis=0)
+        self.ParticlesMeanPos = np.mean((np.array(self.ParticlesPosList)), axis=0)
+        self.ParticlesMeanPosList.append(self.ParticlesMeanPos)
+
+        self.ParticlesVarPos = np.var((np.array(self.ParticlesPosList)), axis=0)  # Not sure if this value is needed
+
+        self.MeanError = np.linalg.norm(self.ParticlesMeanPos - np.array(RobotPos))
 
 
-def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
+def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances, RobotPos):
     # This function starts one filter iteration
 
     ParticleFilterObj.predict(vel_x, vel_y)  # Can be called from main
@@ -122,7 +127,7 @@ def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances):
     ParticleFilterObj.systematic_resampling()
 
     # Measure the mean position of the particles, and the variation
-    ParticleFilterObj.ParticlesMean, ParticleFilterObj.ParticlesVar = ParticleFilterObj.estimate_state()
+    ParticleFilterObj.estimate_state(RobotPos)
 
 
 class Particle:

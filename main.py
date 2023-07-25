@@ -57,7 +57,6 @@ def main():
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances, robot.position)
 
         simulation(envFrame, robot, PF, Iter)
-        simulate_error_and_estimated_path(robot, PF)
 
         Iter += 1
 
