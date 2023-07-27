@@ -66,7 +66,7 @@ class Env:
         G.add_node("start", pos=self.StartTerminal)
         G.add_node("goal", pos=self.EndTerminal)
 
-        # Add obstacle nodes
+        # Add nodes
         for i, step in enumerate(TempSteps):
             G.add_node(f"waypoint{i}", pos=step)
 
@@ -96,11 +96,11 @@ class Env:
         self.beacons.append(beacon_obj1)
         beacon_obj2 = beacon(2, 12, 13)
         self.beacons.append(beacon_obj2)
-        beacon_obj3 = beacon(3, 18, 15)
+        beacon_obj3 = beacon(3, 14, 15)
         self.beacons.append(beacon_obj3)
-        beacon_obj4 = beacon(4, 23, 17)
+        beacon_obj4 = beacon(4, 20, 21)
         self.beacons.append(beacon_obj4)
-        beacon_obj5 = beacon(5, 28, 18)
+        beacon_obj5 = beacon(5, 23, 19)
         self.beacons.append(beacon_obj5)
         beacon_obj6 = beacon(6, 26, 21)
         self.beacons.append(beacon_obj6)

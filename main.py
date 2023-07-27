@@ -39,7 +39,7 @@ def main():
     PF.initialize_particles()
 
     Iter = 0
-    # simulation(envFrame, robot, PF, Iter)
+    simulation(envFrame, robot, PF, Iter)
     # The main algorithm loop
     # In this loop the agent is moving along the path, and its position is estimated using the
     # particle filter algorithm.
@@ -57,14 +57,14 @@ def main():
 
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances, robot.position)
 
-        # simulation(envFrame, robot, PF, Iter)
+        simulation(envFrame, robot, PF, Iter)
 
         Iter += 1
         print('Iteration number: ', Iter)
 
         # input("Press any key to continue>>>")  # Uncomment to control iterations
 
-    # sim_squared_error_in_time(PF, Iter)
+    sim_squared_error_in_time(PF, Iter)
 
     print("The agent has reached the target!!")
     plt.show()  # Make the graph stay on the screen after the simulation has ended
@@ -81,8 +81,12 @@ def monte_carlo_runs():
     while SimNum < 100:
         # The main function will be the only one to run in this loop. It will take about 1 hour to finish this
         # simulation.
-        # main()
+        main()
         SimNum += 1
+
+    print(MSE)
+    # Only print the list of all MSE's (MSE of each simulation).
+    # This list can be used later in a separate environment for plotting
 
 
 if __name__ == "__main__":

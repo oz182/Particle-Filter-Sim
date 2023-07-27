@@ -42,15 +42,15 @@ def simulation(env, agent, ParticleFilter, Iter):
              markerfacecolor="yellow")
 
     # Plot the estimated position as a trajectory, only the algorithm resampled - avoid ugly line from first iteration.
-    if ParticleFilter.IsResampled:
-        x_values = [0]
-        y_values = [0]
-        for i, step in enumerate(ParticleFilter.ParticlesMeanPosList):
-            x_values.append(step[0])
-            y_values.append(step[1])
-        x_values[0] = env.StartTerminal[0]
-        y_values[0] = env.StartTerminal[1]
-        plt.plot(x_values, y_values, 'red')
+    x_values = []
+    y_values = []
+    for i, step in enumerate(ParticleFilter.ParticlesMeanPosList):
+        x_values.append(step[0])
+        y_values.append(step[1])
+        if i < 5:
+            x_values[i] = env.StartTerminal[0]
+            y_values[i] = env.StartTerminal[1]
+    plt.plot(x_values, y_values, 'red')
 
     # Plot a new graph of the Squared error over time
 
