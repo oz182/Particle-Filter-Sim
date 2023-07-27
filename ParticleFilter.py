@@ -118,6 +118,8 @@ class ParticleFilter:
         self.SquaredError = np.linalg.norm(self.ParticlesMeanPos - np.array(RobotPos)) ** 2
         self.SquaredErrorList.append(self.SquaredError)
 
+        self.MSE = np.array(self.SquaredErrorList).mean()
+
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances, RobotPos):
     # This function starts one filter iteration

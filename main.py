@@ -5,6 +5,9 @@ from Agent import *
 from ParticleFilter import *
 from Simulation import *
 
+# Definition for Monte-carlo runs
+MSE = []
+
 
 def arrived_to_goal(robot, env):
     DistToGoal_X = abs(robot.position[0] - env.EndTerminal[0])
@@ -54,18 +57,34 @@ def main():
 
         run_filter_iteration(PF, robot.OdometerVel_x, robot.OdometerVel_y, robot.BeaconsDistances, robot.position)
 
-        simulation(envFrame, robot, PF, Iter)
+        # simulation(envFrame, robot, PF, Iter)
 
         Iter += 1
         print('Iteration number: ', Iter)
 
         # input("Press any key to continue>>>")  # Uncomment to control iterations
 
-    sim_squared_error_in_time(PF, Iter)
+    # sim_squared_error_in_time(PF, Iter)
 
     print("The agent has reached the target!!")
     plt.show()  # Make the graph stay on the screen after the simulation has ended
+    MSE.append(PF.MSE)
+    print(MSE)
+
+
+def monte_carlo_runs():
+    # Start monte carlo runs - loop 100 simulations
+    # To activate this function, I need to change the executed function in the 'if' statement below
+
+    SimNum = 0
+
+    while SimNum < 100:
+        # The main function will be the only one to run in this loop. It will take about 1 hour to finish this
+        # simulation.
+        # main()
+        SimNum += 1
 
 
 if __name__ == "__main__":
     main()
+    # monte_carlo_runs()
