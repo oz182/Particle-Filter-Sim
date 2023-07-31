@@ -67,9 +67,7 @@ def main():
     sim_squared_error_in_time(PF, Iter)
 
     print("The agent has reached the target!!")
-    plt.show()  # Make the graph stay on the screen after the simulation has ended
-    MSE.append(PF.MSE)
-    print(MSE)
+    # plt.show()  # Make the graph stay on the screen after the simulation has ended
 
 
 def monte_carlo_runs():

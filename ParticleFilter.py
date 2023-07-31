@@ -25,7 +25,7 @@ class ParticleFilter:
 
         self.SquaredError = 0
         self.SquaredErrorList = []
-        self.MSE = 0  # Refers to Mean square error
+        self.MeanSqErr = 0  # Refers to Mean square error
 
     def initialize_particles(self):
         # Initialize the particles randomly within the map boundaries
@@ -69,7 +69,7 @@ class ParticleFilter:
 
                     # Likelihood calculation, based on p(z|x), z - dist of beacon to robot,
                     # x - dist of particle to beacon
-                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 1).pdf(data[1])
+                    particle.ParticleLikelihood *= stats.norm(Dist_par_beac, 0.4).pdf(data[1])
 
             # The weight calculation
             particle.weight *= particle.ParticleLikelihood
@@ -118,7 +118,7 @@ class ParticleFilter:
         self.SquaredError = np.linalg.norm(self.ParticlesMeanPos - np.array(RobotPos)) ** 2
         self.SquaredErrorList.append(self.SquaredError)
 
-        self.MSE = np.array(self.SquaredErrorList).mean()
+        self.MeanSqErr = np.array(self.SquaredErrorList).mean()
 
 
 def run_filter_iteration(ParticleFilterObj, vel_x, vel_y, BeaconsDistances, RobotPos):

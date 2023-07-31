@@ -92,9 +92,9 @@ class Env:
         pass
 
     def set_pre_defined_beacons(self):  # Sets pre-defined beacons location
-        beacon_obj1 = beacon(1, 7, 11)
+        beacon_obj1 = beacon(1, 7, 8)
         self.beacons.append(beacon_obj1)
-        beacon_obj2 = beacon(2, 12, 13)
+        beacon_obj2 = beacon(2, 11, 13)
         self.beacons.append(beacon_obj2)
         beacon_obj3 = beacon(3, 14, 15)
         self.beacons.append(beacon_obj3)
