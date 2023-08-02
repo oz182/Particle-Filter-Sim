@@ -62,8 +62,8 @@ def simulation(env, agent, ParticleFilter, Iter):
     plt.pause(0.01)
 
     # Activate for saving the figures of the simulation
-    # frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
-    # fig.savefig(frame_path)
+    frame_path = f"frame_{Iter}.png"  # Provide a file path for each frame
+    fig.savefig(frame_path)
 
 
 def sim_squared_error_in_time(ParticleFilter, Iter):
