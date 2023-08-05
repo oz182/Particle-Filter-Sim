@@ -32,9 +32,10 @@ class ParticleFilter:
         for _ in range(self.num_particles):
             particle = Particle(self.num_particles)
             # Uniform distribution around the map size
-            particle.pos = np.random.uniform(low=[0, 0],
-                                             high=[self.map_size[0], self.map_size[1]])
-            # particle.pos = np.random.uniform(low=[0, 0], high=[10, 10])
+            # particle.pos = np.random.uniform(low=[0, 0], high=[self.map_size[0], self.map_size[1]])
+
+            # Uniform distribution around start position (Improved filter)
+            particle.pos = np.random.uniform(low=[5, 5], high=[5, 5])
             self.particles.append(particle)
 
     def predict(self, vel_x, vel_y):
