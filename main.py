@@ -5,6 +5,8 @@ from Agent import *
 from ParticleFilter import *
 from Simulation import *
 
+import winsound
+
 # Definition for Monte-carlo runs
 MSE = []
 
@@ -28,14 +30,15 @@ def main():
     # envFrame.generate_uniform_random_beacons(10)  # from the assignment: 10 beacons
     envFrame.set_pre_defined_beacons()
 
-    envFrame.generate_uniform_random_path(4000)  # Input number of waypoints for the path
-    # envFrame.set_pre_defined_path()
+    # envFrame.generate_uniform_random_path(4000)  # Input number of waypoints for the path
+    envFrame.set_pre_defined_path()
     # envFrame.generate_random_path(envFrame.StartTerminal, envFrame.EndTerminal, 100)
 
     robot = Agent(envFrame.StartTerminal, envFrame.beacons, envFrame.PathSteps)  # Initialize the agent instance
 
-    # Create the particle filter instance and initialize the particles
-    PF = ParticleFilter(100, [envFrame.width, envFrame.height])
+    # Create the particle filter instance and initialize the
+    ParticlesNum = 3200
+    PF = ParticleFilter(ParticlesNum, [envFrame.width, envFrame.height])
     PF.initialize_particles()
 
     Iter = 0
@@ -79,13 +82,16 @@ def monte_carlo_runs():
 
     SimNum = 0
 
-    while SimNum < 3:
+    while SimNum < 100:
         # The main function will be the only one to run in this loop. It will take about 1 hour to finish this
         # simulation.
         main()
         SimNum += 1
+        print("Simulation iteration: ", SimNum)
 
     print(MSE)
+    winsound.Beep(1500, 3000)  # Make a beep sound when finished
+
     # Only print the list of all MSE's (MSE of each simulation).
     # This list can be used later in a separate environment for plotting
 
